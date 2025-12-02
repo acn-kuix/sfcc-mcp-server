@@ -23,13 +23,13 @@ const StructuredData: React.FC<StructuredDataProps> = ({ structuredData }) => {
       "datePublished": SITE_DATES.PUBLISHED,
       "dateModified": SITE_DATES.MODIFIED,
       "author": {
-        "@type": "Person",
-        "name": "Thomas Theunen",
-        "url": "https://github.com/taurgis"
+        "@type": "Organization",
+        "name": "ACN-KUIX",
+        "url": "https://github.com/acn-kuix"
       },
       "publisher": {
-        "@type": "Person",
-        "name": "Thomas Theunen"
+        "@type": "Organization",
+        "name": "ACN-KUIX"
       },
       "programmingLanguage": ["JavaScript", "TypeScript"],
       "runtimePlatform": "Node.js",
@@ -37,9 +37,8 @@ const StructuredData: React.FC<StructuredDataProps> = ({ structuredData }) => {
       "requirements": "Node.js 18+, npm",
       "featureList": [
         "SFCC API Documentation Access",
-        "Real-time Log Analysis", 
+        "Real-time Log Analysis",
         "System Object Exploration",
-        "Cartridge Generation",
         "Best Practices Guides",
         "AI Assistant Integration"
       ],
@@ -51,10 +50,10 @@ const StructuredData: React.FC<StructuredDataProps> = ({ structuredData }) => {
         "availability": "https://schema.org/InStock"
       },
       "license": "https://opensource.org/licenses/MIT",
-      "codeRepository": "https://github.com/taurgis/sfcc-dev-mcp",
+      "codeRepository": "https://github.com/acn-kuix/sfcc-mcp-server",
       "maintainer": {
-        "@type": "Person", 
-        "name": "Thomas Theunen"
+        "@type": "Organization",
+        "name": "ACN-KUIX"
       }
     },
     // Page-specific structured data (if provided)

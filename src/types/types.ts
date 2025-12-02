@@ -1,123 +1,203 @@
 /**
- * Type definitions for SFCC MCP Server
+ * SFCC MCPサーバー用型定義
  *
- * This module contains all TypeScript interfaces and types used throughout
- * the SFCC (Salesforce B2C Commerce Cloud) MCP server application.
+ * このモジュールにはSFCC（Salesforce B2C Commerce Cloud）MCPサーバー
+ * アプリケーション全体で使用されるすべてのTypeScriptインターフェースと型が含まれています。
  */
 
 /**
- * Configuration interface for SFCC connection
- * Supports both basic authentication (username/password) and OAuth (clientId/clientSecret)
+ * SFCC接続用の設定インターフェース
+ * 基本認証（ユーザー名/パスワード）とOAuth（clientId/clientSecret）の両方をサポート
  */
 export interface SFCCConfig {
-  /** SFCC hostname (e.g., zziu-006.dx.commercecloud.salesforce.com) */
+  /** SFCCホスト名（例: zziu-006.dx.commercecloud.salesforce.com） */
   hostname?: string;
-  /** Username for basic authentication (optional if using OAuth) */
+  /** 基本認証用のユーザー名（OAuth使用時はオプション） */
   username?: string;
-  /** Password for basic authentication (optional if using OAuth) */
+  /** 基本認証用のパスワード（OAuth使用時はオプション） */
   password?: string;
-  /** Client ID for OAuth authentication (optional if using basic auth) */
+  /** OAuth認証用のクライアントID（基本認証使用時はオプション） */
   clientId?: string;
-  /** Client secret for OAuth authentication (optional if using basic auth) */
+  /** OAuth認証用のクライアントシークレット（基本認証使用時はオプション） */
   clientSecret?: string;
-  /** Site ID for SFCC instance */
+  /** SFCCインスタンスのサイトID */
   siteId?: string;
+  /** SCAPI用のショートコード（Business Managerから取得） */
+  shortCode?: string;
+  /** SCAPI用の組織ID */
+  organizationId?: string;
 }
 
 /**
- * Configuration structure from dw.json file
- * This matches the standard Salesforce Commerce Cloud dw.json configuration format
+ * dw.jsonファイルからの設定構造
+ * 標準的なSalesforce Commerce Cloud dw.json設定形式に対応
  */
 export interface DwJsonConfig {
-  /** SFCC hostname */
+  /** SFCCホスト名 */
   hostname: string;
-  /** Username for WebDAV access */
+  /** WebDAVアクセス用のユーザー名 */
   username: string;
-  /** Password for WebDAV access */
+  /** WebDAVアクセス用のパスワード */
   password: string;
-  /** Optional code version */
+  /** オプションのコードバージョン */
   'code-version'?: string;
-  /** Optional client ID for OAuth */
+  /** オプションのOAuth用クライアントID */
   'client-id'?: string;
-  /** Optional client secret for OAuth */
+  /** オプションのOAuth用クライアントシークレット */
   'client-secret'?: string;
-  /** Optional site ID for SFCC instance */
+  /** オプションのSFCCインスタンス用サイトID */
   'site-id'?: string;
+  /** オプションのSCAPI用ショートコード */
+  'short-code'?: string;
+  /** オプションのSCAPI用組織ID */
+  'organization-id'?: string;
 }
 
 /**
- * Log levels supported by the SFCC logging system
+ * SFCCログシステムでサポートされるログレベル
  */
 export type LogLevel = 'error' | 'warn' | 'info' | 'debug';
 
 /**
- * Structure for log file metadata
+ * ログファイルメタデータの構造
  */
 export interface LogFileInfo {
-  /** File name */
+  /** ファイル名 */
   name: string;
-  /** File size in bytes */
+  /** ファイルサイズ（バイト） */
   size: number;
-  /** Last modification timestamp */
+  /** 最終更新タイムスタンプ */
   lastModified: string;
 }
 
 /**
- * Summary statistics for log analysis
+ * ログ分析用のサマリー統計
  */
 export interface LogSummary {
-  /** Date of the logs being summarized */
+  /** サマリー対象のログの日付 */
   date: string;
-  /** Number of error entries found */
+  /** 検出されたエラーエントリ数 */
   errorCount: number;
-  /** Number of warning entries found */
+  /** 検出された警告エントリ数 */
   warningCount: number;
-  /** Number of info entries found */
+  /** 検出された情報エントリ数 */
   infoCount: number;
-  /** Number of debug entries found */
+  /** 検出されたデバッグエントリ数 */
   debugCount: number;
-  /** List of unique error patterns identified */
+  /** 識別された一意のエラーパターンのリスト */
   keyIssues: string[];
-  /** List of log files analyzed */
+  /** 分析されたログファイルのリスト */
   files: string[];
 }
 
 /**
- * OAuth 2.0 token response from SFCC authorization server
+ * SFCC認可サーバーからのOAuth 2.0トークンレスポンス
  */
 export interface OAuthTokenResponse {
-  /** Token expiration time in seconds */
+  /** トークン有効期限（秒） */
   expires_in: number;
-  /** Token type (always "Bearer" for SFCC) */
+  /** トークンタイプ（SFCCでは常に"Bearer"） */
   token_type: string;
-  /** The actual access token */
+  /** 実際のアクセストークン */
   access_token: string;
 }
 
 /**
- * OAuth token with expiration tracking
+ * 有効期限追跡付きOAuthトークン
  */
 export interface OAuthToken {
-  /** The access token */
+  /** アクセストークン */
   accessToken: string;
-  /** Token type */
+  /** トークンタイプ */
   tokenType: string;
-  /** When the token expires (timestamp) */
+  /** トークンの有効期限（タイムスタンプ） */
   expiresAt: number;
 }
 
 /**
- * OCAPI client configuration
+ * OCAPIクライアント設定
  */
 export interface OCAPIConfig {
-  /** SFCC hostname */
+  /** SFCCホスト名 */
   hostname: string;
-  /** OAuth client ID */
+  /** OAuthクライアントID */
   clientId: string;
-  /** OAuth client secret */
+  /** OAuthクライアントシークレット */
   clientSecret: string;
-  /** Site ID (optional, for shop API) */
+  /** サイトID（オプション、Shop API用） */
   siteId?: string;
-  /** API version (default: v21_3) */
+  /** APIバージョン（デフォルト: v21_3） */
   version?: string;
+}
+
+/**
+ * エンドポイントパラメータ定義
+ */
+export interface EndpointParam {
+  /** パラメータ名 */
+  name: string;
+  /** パラメータの説明 */
+  description: string;
+  /** パラメータタイプ（string, number, boolean, object） */
+  type: string;
+  /** パラメータが必須かどうか */
+  required: boolean;
+}
+
+/**
+ * OCAPI/SCAPI用のAPIエンドポイント定義
+ */
+export interface Endpoint {
+  /** エンドポイントの一意のツール名 */
+  toolName: string;
+  /** パスパラメータ付きのAPIパス（例: /products/{product_id}） */
+  path: string;
+  /** 人間可読な説明 */
+  description: string;
+  /** HTTPメソッド（GET, POST, PUT, PATCH, DELETE） */
+  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  /** パラメータ定義 */
+  parameters: EndpointParam[];
+  /** POST/PUT/PATCH用のデフォルトリクエストボディ */
+  defaultBody?: Record<string, any>;
+  /** APIタイプ: Data APIは'ocapi'、Shopper APIは'scapi' */
+  apiType: 'ocapi' | 'scapi';
+  /** このエンドポイントがsite_idを必要とするかどうか */
+  requiresSiteId?: boolean;
+}
+
+/**
+ * OCAPI設定を拡張するSCAPI設定
+ */
+export interface SCAPIConfig extends OCAPIConfig {
+  /** SCAPI用のショートコード（Business Managerから取得） */
+  shortCode?: string;
+  /** SCAPI用の組織ID */
+  organizationId?: string;
+}
+
+/**
+ * Data APIリクエストパラメータ
+ */
+export interface DataAPIRequestParams {
+  /** URLで置換するパスパラメータ */
+  pathParams?: Record<string, string>;
+  /** クエリパラメータ */
+  queryParams?: Record<string, string | number | boolean>;
+  /** POST/PUT/PATCH用のリクエストボディ */
+  body?: Record<string, any>;
+}
+
+/**
+ * Data APIレスポンスラッパー
+ */
+export interface DataAPIResponse<T = any> {
+  /** レスポンスデータ */
+  data: T;
+  /** HTTPステータスコード */
+  status: number;
+  /** リクエストが成功したかどうか */
+  success: boolean;
+  /** 失敗時のエラーメッセージ */
+  error?: string;
 }

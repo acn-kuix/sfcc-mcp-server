@@ -307,7 +307,7 @@ const AssistantTabs: React.FC = () => {
     claude: [
       'List available SFCC documentation tools',
       'Analyze recent error logs then summarize likely root cause',
-      'Generate cartridge structure named demo_cartridge',
+      'Search best practices for security guidelines',
       'Show hook reference entries for SCAPI extension points'
     ],
     copilot: [
@@ -536,9 +536,9 @@ const InstructionFilesTabs: React.FC = () => {
                     <h4 className="font-semibold text-gray-900 mb-2">{file.name}</h4>
                     <p className="text-sm text-gray-600 mb-3">{file.description}</p>
                     <div className="flex flex-wrap gap-3">
-                      <a 
-                        href={`https://github.com/taurgis/sfcc-dev-mcp/tree/main/ai-instructions/cursor/.cursor/rules`}
-                        target="_blank" 
+                      <a
+                        href={`https://github.com/acn-kuix/sfcc-mcp-server/tree/main/ai-instructions/cursor/.cursor/rules`}
+                        target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-800 rounded-lg text-sm font-medium transition-all duration-200 no-underline hover:no-underline focus:no-underline"
                       >

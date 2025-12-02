@@ -130,8 +130,8 @@ const HomePage: React.FC = () => {
             </div>
             <H2 id="quick-start" className="text-3xl font-bold mb-4">🚀 Zero-Config Quick Start</H2>
             <p className="text-lg text-gray-700 max-w-3xl mx-auto">
-              Jump straight into SFCC development with AI assistance. Get access to comprehensive documentation, 
-              best practices, and cartridge generation tools instantly.
+              Jump straight into SFCC development with AI assistance. Get access to comprehensive documentation
+              and best practices instantly.
             </p>
           </div>
           
@@ -234,10 +234,10 @@ const HomePage: React.FC = () => {
                 instruction files for GitHub Copilot, Claude, and Cursor.
               </p>
               <div className="flex items-center gap-4">
-                <a 
-                  href="https://github.com/taurgis/sfcc-dev-mcp/tree/main/ai-instructions" 
-                  className="inline-flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-700 transition-colors no-underline hover:no-underline focus:no-underline" 
-                  target="_blank" 
+                <a
+                  href="https://github.com/acn-kuix/sfcc-mcp-server/tree/main/ai-instructions"
+                  className="inline-flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-700 transition-colors no-underline hover:no-underline focus:no-underline"
+                  target="_blank"
                   rel="noopener noreferrer"
                 >
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -345,17 +345,6 @@ const HomePage: React.FC = () => {
                       <span className="text-red-600 font-bold text-sm">4</span>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-1">Feature Scaffolding</h4>
-                      <p className="text-sm text-gray-600">Manually create cartridge structures and boilerplate code for new cartridges, new SCAPI endpoints, ...</p>
-                      <div className="text-xs text-red-600 font-medium mt-1">⏱️ 30-60 minutes</div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex gap-4 p-4 bg-red-50 border border-red-200 rounded-xl transition-all hover:shadow-md">
-                    <div className="bg-red-100 rounded-full p-2 mt-1 flex-shrink-0">
-                      <span className="text-red-600 font-bold text-sm">5</span>
-                    </div>
-                    <div>
                       <h4 className="font-semibold text-gray-900 mb-1">Context Switching</h4>
                       <p className="text-sm text-gray-600">Jump between IDE, browser, logs, and documentation</p>
                       <div className="text-xs text-red-600 font-medium mt-1">⏱️ Constant overhead</div>
@@ -425,17 +414,6 @@ const HomePage: React.FC = () => {
                   <div className="flex gap-4 p-4 bg-green-50 border border-green-200 rounded-xl transition-all hover:shadow-md">
                     <div className="bg-green-100 rounded-full p-2 mt-1 flex-shrink-0">
                       <span className="text-green-600 font-bold text-sm">4</span>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-1">Instant Scaffolding</h4>
-                      <p className="text-sm text-gray-600">"Create custom SCAPI endpoint for wishlist" → complete cartridge with routes</p>
-                      <div className="text-xs text-green-600 font-medium mt-1">⏱️ 1-2 minutes</div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex gap-4 p-4 bg-green-50 border border-green-200 rounded-xl transition-all hover:shadow-md">
-                    <div className="bg-green-100 rounded-full p-2 mt-1 flex-shrink-0">
-                      <span className="text-green-600 font-bold text-sm">5</span>
                     </div>
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-1">Stay in Flow</h4>
@@ -510,12 +488,6 @@ const HomePage: React.FC = () => {
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 <span className="text-gray-700">SFRA guides and best practices</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <span className="text-gray-700">Cartridge generation tools</span>
               </li>
               <li className="flex items-center gap-3">
                 <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -616,15 +588,6 @@ const HomePage: React.FC = () => {
             <p className="text-sm text-gray-600">Live exploration</p>
           </div>
           
-          <div className="text-center">
-            <div className="bg-orange-100 rounded-full p-4 w-16 h-16 mx-auto mb-3">
-              <svg className="w-8 h-8 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 4a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1V8zm8 0a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1h-6a1 1 0 01-1-1V8z" />
-              </svg>
-            </div>
-            <h3 className="font-semibold text-gray-900">Cartridges</h3>
-            <p className="text-sm text-gray-600">Auto generation</p>
-          </div>
           <div className="text-center">
             <div className="bg-yellow-100 rounded-full p-4 w-16 h-16 mx-auto mb-3">
               <svg className="w-8 h-8 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">

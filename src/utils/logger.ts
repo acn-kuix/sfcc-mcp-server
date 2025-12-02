@@ -1,23 +1,23 @@
 /**
- * Logger class for standardized logging across the SFCC MCP application.
- * Provides consistent logging with timestamps and log levels.
- * Always logs to files for consistent debugging and to avoid interfering with stdio.
+ * SFCC MCPアプリケーション全体で標準化されたログ出力を行うLoggerクラス。
+ * タイムスタンプとログレベル付きの一貫したログ出力を提供します。
+ * 一貫したデバッグとstdioへの干渉を避けるため、常にファイルにログを出力します。
  *
- * ## Log Directory Location
+ * ## ログディレクトリの場所
  *
- * The logger uses the operating system's temporary directory via Node.js `os.tmpdir()`:
- * - **macOS**: `/var/folders/{user-specific-path}/T/sfcc-mcp-logs/`
- * - **Linux**: `/tmp/sfcc-mcp-logs/` (typically)
- * - **Windows**: `%TEMP%\sfcc-mcp-logs\` (typically `C:\Users\{user}\AppData\Local\Temp\`)
+ * ロガーはNode.jsの`os.tmpdir()`を通じてオペレーティングシステムの一時ディレクトリを使用します:
+ * - **macOS**: `/var/folders/{ユーザー固有のパス}/T/sfcc-mcp-logs/`
+ * - **Linux**: `/tmp/sfcc-mcp-logs/`（通常）
+ * - **Windows**: `%TEMP%\sfcc-mcp-logs\`（通常 `C:\Users\{ユーザー}\AppData\Local\Temp\`）
  *
- * This approach provides:
- * - User-specific isolation (more secure than system-wide `/tmp`)
- * - Automatic cleanup by the OS
- * - Platform-appropriate temporary storage
- * - Proper permissions handling
+ * このアプローチの利点:
+ * - ユーザー固有の分離（システム全体の`/tmp`よりセキュア）
+ * - OSによる自動クリーンアップ
+ * - プラットフォームに適した一時ストレージ
+ * - 適切なパーミッション処理
  *
- * To find your log directory, use `Logger.getInstance().getLogDirectory()` or check
- * the debug logs which show the directory path during initialization.
+ * ログディレクトリを確認するには、`Logger.getInstance().getLogDirectory()`を使用するか、
+ * 初期化中にディレクトリパスを表示するデバッグログを確認してください。
  */
 
 import { appendFileSync, existsSync, mkdirSync } from 'fs';
@@ -32,18 +32,18 @@ export class Logger {
   private static instance: Logger | null = null;
 
   /**
-   * Create a new Logger instance
-   * @param context The context/component name for this logger
-   * @param enableTimestamp Whether to include timestamps in log messages (default: true)
-   * @param debugEnabled Whether to enable debug logging (default: false)
-   * @param customLogDir Custom log directory for testing purposes
+   * 新しいLoggerインスタンスを作成
+   * @param context このロガーのコンテキスト/コンポーネント名
+   * @param enableTimestamp ログメッセージにタイムスタンプを含めるかどうか（デフォルト: true）
+   * @param debugEnabled デバッグログを有効にするかどうか（デフォルト: false）
+   * @param customLogDir テスト用のカスタムログディレクトリ
    */
   constructor(context: string = 'SFCC-MCP', enableTimestamp: boolean = true, debugEnabled: boolean = false, customLogDir?: string) {
     this.context = context;
     this.enableTimestamp = enableTimestamp;
     this.debugEnabled = debugEnabled;
 
-    // Set up log directory - use custom directory for testing or default for production
+    // ログディレクトリをセットアップ - テスト用のカスタムディレクトリまたは本番用のデフォルトを使用
     this.logDir = customLogDir ?? join(tmpdir(), 'sfcc-mcp-logs');
     if (!existsSync(this.logDir)) {
       mkdirSync(this.logDir, { recursive: true });
@@ -51,16 +51,16 @@ export class Logger {
   }
 
   /**
-   * Initialize the global logger instance with specific settings
-   * This should be called once at application startup
+   * 特定の設定でグローバルロガーインスタンスを初期化
+   * アプリケーション起動時に一度だけ呼び出す必要があります
    */
   public static initialize(context: string = 'SFCC-MCP', enableTimestamp: boolean = true, debugEnabled: boolean = false, customLogDir?: string): void {
     Logger.instance = new Logger(context, enableTimestamp, debugEnabled, customLogDir);
   }
 
   /**
-   * Get the global logger instance
-   * If not initialized, creates a default instance
+   * グローバルロガーインスタンスを取得
+   * 初期化されていない場合はデフォルトインスタンスを作成
    */
   public static getInstance(): Logger {
     Logger.instance ??= new Logger();
@@ -68,9 +68,9 @@ export class Logger {
   }
 
   /**
-   * Create a child logger with a new context but inheriting other settings from the global instance
-   * @param subContext The sub-context to append to the current context
-   * @returns A new Logger instance with the combined context
+   * 新しいコンテキストを持ちながらグローバルインスタンスから他の設定を継承する子ロガーを作成
+   * @param subContext 現在のコンテキストに追加するサブコンテキスト
+   * @returns 結合されたコンテキストを持つ新しいLoggerインスタンス
    */
   public static getChildLogger(subContext: string): Logger {
     const globalLogger = Logger.getInstance();
@@ -78,9 +78,9 @@ export class Logger {
   }
 
   /**
-   * Format a log message with optional timestamp and context
-   * @param message The message to format
-   * @returns Formatted message string
+   * オプションのタイムスタンプとコンテキストを含めてログメッセージをフォーマット
+   * @param message フォーマットするメッセージ
+   * @returns フォーマットされたメッセージ文字列
    */
   private formatMessage(message: string): string {
     const timestamp = this.enableTimestamp ? `[${new Date().toISOString()}] ` : '';
@@ -88,7 +88,7 @@ export class Logger {
   }
 
   /**
-   * Write log message to appropriate log file
+   * ログメッセージを適切なログファイルに書き込み
    */
   private writeLog(level: 'info' | 'warn' | 'error' | 'debug', message: string, ...args: any[]): void {
     const formattedMessage = this.formatMessage(message);
@@ -96,14 +96,14 @@ export class Logger {
       typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg),
     ).join(' ')}` : formattedMessage;
 
-    // Always write to log files
+    // 常にログファイルに書き込み
     const logFile = join(this.logDir, `sfcc-mcp-${level}.log`);
     const logEntry = `${fullMessage}\n`;
 
     try {
       appendFileSync(logFile, logEntry, 'utf8');
     } catch (error) {
-      // Fallback: if file logging fails, try stderr for critical errors only
+      // フォールバック: ファイルログが失敗した場合、重大なエラーのみstderrを試行
       if (level === 'error') {
         process.stderr.write(`[LOGGER ERROR] Could not write to log file: ${error}\n`);
         process.stderr.write(`${logEntry}`);
@@ -112,45 +112,45 @@ export class Logger {
   }
 
   /**
-   * Log an informational message
-   * @param message The message to log
-   * @param args Optional arguments to include
+   * 情報メッセージをログ出力
+   * @param message ログ出力するメッセージ
+   * @param args 含める任意の引数
    */
   public log(message: string, ...args: any[]): void {
     this.writeLog('info', message, ...args);
   }
 
   /**
-   * Log an informational message (alias for log)
-   * @param message The message to log
-   * @param args Optional arguments to include
+   * 情報メッセージをログ出力（logのエイリアス）
+   * @param message ログ出力するメッセージ
+   * @param args 含める任意の引数
    */
   public info(message: string, ...args: any[]): void {
     this.writeLog('info', message, ...args);
   }
 
   /**
-   * Log a warning message
-   * @param message The warning message to log
-   * @param args Optional arguments to include
+   * 警告メッセージをログ出力
+   * @param message ログ出力する警告メッセージ
+   * @param args 含める任意の引数
    */
   public warn(message: string, ...args: any[]): void {
     this.writeLog('warn', message, ...args);
   }
 
   /**
-   * Log an error message
-   * @param message The error message to log
-   * @param args Optional arguments to include
+   * エラーメッセージをログ出力
+   * @param message ログ出力するエラーメッセージ
+   * @param args 含める任意の引数
    */
   public error(message: string, ...args: any[]): void {
     this.writeLog('error', message, ...args);
   }
 
   /**
-   * Log a debug message (only if debug is enabled)
-   * @param message The debug message to log
-   * @param args Optional arguments to include
+   * デバッグメッセージをログ出力（デバッグが有効な場合のみ）
+   * @param message ログ出力するデバッグメッセージ
+   * @param args 含める任意の引数
    */
   public debug(message: string, ...args: any[]): void {
     if (this.debugEnabled) {
@@ -159,9 +159,9 @@ export class Logger {
   }
 
   /**
-   * Log method entry with parameters
-   * @param methodName The name of the method being entered
-   * @param params Optional parameters being passed to the method
+   * パラメータ付きでメソッド開始をログ出力
+   * @param methodName 開始されるメソッドの名前
+   * @param params メソッドに渡される任意のパラメータ
    */
   public methodEntry(methodName: string, params?: any): void {
     if (this.debugEnabled) {
@@ -171,9 +171,9 @@ export class Logger {
   }
 
   /**
-   * Log method exit with optional result
-   * @param methodName The name of the method being exited
-   * @param result Optional result being returned from the method
+   * 結果付きでメソッド終了をログ出力（オプション）
+   * @param methodName 終了されるメソッドの名前
+   * @param params メソッドから返される任意の結果
    */
   public methodExit(methodName: string, result?: any): void {
     if (this.debugEnabled) {
@@ -183,9 +183,9 @@ export class Logger {
   }
 
   /**
-   * Log performance timing information
-   * @param operation The operation being timed
-   * @param startTime The start time (from performance.now() or Date.now())
+   * パフォーマンス計測情報をログ出力
+   * @param operation 計測対象の操作
+   * @param startTime 開始時刻（performance.now()またはDate.now()から）
    */
   public timing(operation: string, startTime: number): void {
     if (this.debugEnabled) {
@@ -195,29 +195,29 @@ export class Logger {
   }
 
   /**
-   * Create a child logger with a new context but inheriting other settings
-   * @param subContext The sub-context to append to the current context
-   * @returns A new Logger instance with the combined context
+   * 新しいコンテキストを持ちながら他の設定を継承する子ロガーを作成
+   * @param subContext 現在のコンテキストに追加するサブコンテキスト
+   * @returns 結合されたコンテキストを持つ新しいLoggerインスタンス
    */
   public createChildLogger(subContext: string): Logger {
     return new Logger(`${this.context}:${subContext}`, this.enableTimestamp, this.debugEnabled, this.logDir);
   }
 
   /**
-   * Enable or disable debug logging
-   * @param enabled Whether debug logging should be enabled
+   * デバッグログの有効/無効を設定
+   * @param enabled デバッグログを有効にするかどうか
    */
   public setDebugEnabled(enabled: boolean): void {
     this.debugEnabled = enabled;
   }
 
   /**
-   * Get the current log directory
+   * 現在のログディレクトリを取得
    */
   public getLogDirectory(): string {
     return this.logDir;
   }
 }
 
-// Export the singleton instance getter for convenience
+// 便利のためシングルトンインスタンスゲッターをエクスポート
 export const getLogger = Logger.getInstance;

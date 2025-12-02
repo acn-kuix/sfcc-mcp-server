@@ -1,0 +1,739 @@
+{
+  "endpoints": [
+    {
+      "toolName": "search_products",
+      "path": "/product_search",
+      "description": "Search for products in the catalog using various filters. Supports filtering by name, price range, category, and other attributes. Returns product data including ID, name, price, and availability.",
+      "method": "POST",
+      "parameters": [
+        {
+          "name": "site_id",
+          "description": "The site ID to search products in",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "query",
+          "description": "Search query text to find products by name or description",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "count",
+          "description": "Number of results to return (default: 25, max: 200)",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "start",
+          "description": "Starting index for pagination (default: 0)",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "expand",
+          "description": "Comma-separated list of fields to expand (e.g., 'prices,images,availability')",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "defaultBody": {
+        "query": {
+          "match_all_query": {}
+        },
+        "count": 25,
+        "start": 0
+      },
+      "apiType": "ocapi",
+      "requiresSiteId": true
+    },
+    {
+      "toolName": "get_product",
+      "path": "/products/{product_id}",
+      "description": "Get detailed information about a specific product by its ID. Returns full product data including variants, prices, images, and custom attributes.",
+      "method": "GET",
+      "parameters": [
+        {
+          "name": "site_id",
+          "description": "The site ID where the product exists",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "product_id",
+          "description": "The unique product ID",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "expand",
+          "description": "Comma-separated list of fields to expand (e.g., 'prices,images,variations')",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "apiType": "ocapi",
+      "requiresSiteId": true
+    },
+    {
+      "toolName": "get_catalogs",
+      "path": "/catalogs",
+      "description": "Get a list of all available catalogs in the SFCC instance. Returns catalog IDs, names, and basic metadata.",
+      "method": "GET",
+      "parameters": [
+        {
+          "name": "count",
+          "description": "Number of results to return (default: 25)",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "start",
+          "description": "Starting index for pagination (default: 0)",
+          "type": "number",
+          "required": false
+        }
+      ],
+      "apiType": "ocapi",
+      "requiresSiteId": false
+    },
+    {
+      "toolName": "get_catalog",
+      "path": "/catalogs/{catalog_id}",
+      "description": "Get detailed information about a specific catalog including its categories and configuration.",
+      "method": "GET",
+      "parameters": [
+        {
+          "name": "catalog_id",
+          "description": "The unique catalog ID",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "apiType": "ocapi",
+      "requiresSiteId": false
+    },
+    {
+      "toolName": "get_categories",
+      "path": "/catalogs/{catalog_id}/categories",
+      "description": "Get all categories within a specific catalog. Returns category hierarchy with IDs, names, and parent relationships.",
+      "method": "GET",
+      "parameters": [
+        {
+          "name": "catalog_id",
+          "description": "The catalog ID to get categories from",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "levels",
+          "description": "Number of category levels to return (default: 1)",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "count",
+          "description": "Number of results to return (default: 25)",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "start",
+          "description": "Starting index for pagination (default: 0)",
+          "type": "number",
+          "required": false
+        }
+      ],
+      "apiType": "ocapi",
+      "requiresSiteId": false
+    },
+    {
+      "toolName": "get_category",
+      "path": "/catalogs/{catalog_id}/categories/{category_id}",
+      "description": "Get detailed information about a specific category including its subcategories and products.",
+      "method": "GET",
+      "parameters": [
+        {
+          "name": "catalog_id",
+          "description": "The catalog ID containing the category",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "category_id",
+          "description": "The unique category ID",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "levels",
+          "description": "Number of subcategory levels to return",
+          "type": "number",
+          "required": false
+        }
+      ],
+      "apiType": "ocapi",
+      "requiresSiteId": false
+    },
+    {
+      "toolName": "get_sites",
+      "path": "/sites",
+      "description": "Get a list of all sites in the SFCC instance. Returns site IDs, names, and configuration details.",
+      "method": "GET",
+      "parameters": [
+        {
+          "name": "count",
+          "description": "Number of results to return (default: 25)",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "start",
+          "description": "Starting index for pagination (default: 0)",
+          "type": "number",
+          "required": false
+        }
+      ],
+      "apiType": "ocapi",
+      "requiresSiteId": false
+    },
+    {
+      "toolName": "get_site",
+      "path": "/sites/{site_id}",
+      "description": "Get detailed information about a specific site including its configuration, locales, and currencies.",
+      "method": "GET",
+      "parameters": [
+        {
+          "name": "site_id",
+          "description": "The unique site ID",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "apiType": "ocapi",
+      "requiresSiteId": false
+    },
+    {
+      "toolName": "search_campaigns",
+      "path": "/campaigns",
+      "description": "Search for campaigns in the SFCC instance. Returns campaign data including status, dates, and associated promotions.",
+      "method": "POST",
+      "parameters": [
+        {
+          "name": "site_id",
+          "description": "The site ID to search campaigns in",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "count",
+          "description": "Number of results to return (default: 25)",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "start",
+          "description": "Starting index for pagination (default: 0)",
+          "type": "number",
+          "required": false
+        }
+      ],
+      "defaultBody": {
+        "query": {
+          "match_all_query": {}
+        },
+        "count": 25,
+        "start": 0
+      },
+      "apiType": "ocapi",
+      "requiresSiteId": true
+    },
+    {
+      "toolName": "get_campaign",
+      "path": "/sites/{site_id}/campaigns/{campaign_id}",
+      "description": "Get detailed information about a specific campaign including its promotions and configuration.",
+      "method": "GET",
+      "parameters": [
+        {
+          "name": "site_id",
+          "description": "The site ID containing the campaign",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "campaign_id",
+          "description": "The unique campaign ID",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "apiType": "ocapi",
+      "requiresSiteId": true
+    },
+    {
+      "toolName": "search_promotions",
+      "path": "/promotions",
+      "description": "Search for promotions in the SFCC instance. Returns promotion data including type, discounts, and qualifiers.",
+      "method": "POST",
+      "parameters": [
+        {
+          "name": "site_id",
+          "description": "The site ID to search promotions in",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "campaign_id",
+          "description": "Filter promotions by campaign ID",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "count",
+          "description": "Number of results to return (default: 25)",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "start",
+          "description": "Starting index for pagination (default: 0)",
+          "type": "number",
+          "required": false
+        }
+      ],
+      "defaultBody": {
+        "query": {
+          "match_all_query": {}
+        },
+        "count": 25,
+        "start": 0
+      },
+      "apiType": "ocapi",
+      "requiresSiteId": true
+    },
+    {
+      "toolName": "search_coupons",
+      "path": "/coupons",
+      "description": "Search for coupons in the SFCC instance. Returns coupon codes, redemption limits, and associated promotions.",
+      "method": "POST",
+      "parameters": [
+        {
+          "name": "site_id",
+          "description": "The site ID to search coupons in",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "count",
+          "description": "Number of results to return (default: 25)",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "start",
+          "description": "Starting index for pagination (default: 0)",
+          "type": "number",
+          "required": false
+        }
+      ],
+      "defaultBody": {
+        "query": {
+          "match_all_query": {}
+        },
+        "count": 25,
+        "start": 0
+      },
+      "apiType": "ocapi",
+      "requiresSiteId": true
+    },
+    {
+      "toolName": "get_inventory_lists",
+      "path": "/inventory_lists",
+      "description": "Get all inventory lists in the SFCC instance. Returns list IDs, names, and configuration.",
+      "method": "GET",
+      "parameters": [
+        {
+          "name": "count",
+          "description": "Number of results to return (default: 25)",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "start",
+          "description": "Starting index for pagination (default: 0)",
+          "type": "number",
+          "required": false
+        }
+      ],
+      "apiType": "ocapi",
+      "requiresSiteId": false
+    },
+    {
+      "toolName": "get_inventory_list",
+      "path": "/inventory_lists/{inventory_list_id}",
+      "description": "Get detailed information about a specific inventory list including its configuration.",
+      "method": "GET",
+      "parameters": [
+        {
+          "name": "inventory_list_id",
+          "description": "The unique inventory list ID",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "apiType": "ocapi",
+      "requiresSiteId": false
+    },
+    {
+      "toolName": "get_product_inventory",
+      "path": "/inventory_lists/{inventory_list_id}/product_inventory_records/{product_id}",
+      "description": "Get inventory information for a specific product in an inventory list.",
+      "method": "GET",
+      "parameters": [
+        {
+          "name": "inventory_list_id",
+          "description": "The inventory list ID",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "product_id",
+          "description": "The product ID to get inventory for",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "apiType": "ocapi",
+      "requiresSiteId": false
+    },
+    {
+      "toolName": "search_customers",
+      "path": "/customer_search",
+      "description": "Search for customers in the SFCC instance. Returns customer data including profiles, addresses, and order history references.",
+      "method": "POST",
+      "parameters": [
+        {
+          "name": "site_id",
+          "description": "The site ID to search customers in",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "query",
+          "description": "Search query text (email, name, customer number)",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "count",
+          "description": "Number of results to return (default: 25)",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "start",
+          "description": "Starting index for pagination (default: 0)",
+          "type": "number",
+          "required": false
+        }
+      ],
+      "defaultBody": {
+        "query": {
+          "match_all_query": {}
+        },
+        "count": 25,
+        "start": 0
+      },
+      "apiType": "ocapi",
+      "requiresSiteId": true
+    },
+    {
+      "toolName": "get_customer",
+      "path": "/sites/{site_id}/customers/{customer_id}",
+      "description": "Get detailed information about a specific customer including profile, addresses, and payment instruments.",
+      "method": "GET",
+      "parameters": [
+        {
+          "name": "site_id",
+          "description": "The site ID containing the customer",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "customer_id",
+          "description": "The unique customer ID",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "expand",
+          "description": "Comma-separated list of fields to expand (e.g., 'addresses,payment_instruments')",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "apiType": "ocapi",
+      "requiresSiteId": true
+    },
+    {
+      "toolName": "get_customer_groups",
+      "path": "/sites/{site_id}/customer_groups",
+      "description": "Get all customer groups for a specific site. Returns group IDs, names, and descriptions.",
+      "method": "GET",
+      "parameters": [
+        {
+          "name": "site_id",
+          "description": "The site ID to get customer groups from",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "count",
+          "description": "Number of results to return (default: 25)",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "start",
+          "description": "Starting index for pagination (default: 0)",
+          "type": "number",
+          "required": false
+        }
+      ],
+      "apiType": "ocapi",
+      "requiresSiteId": true
+    },
+    {
+      "toolName": "search_custom_objects",
+      "path": "/custom_objects/{object_type}",
+      "description": "Search for custom objects of a specific type. Returns custom object data based on the object definition.",
+      "method": "POST",
+      "parameters": [
+        {
+          "name": "object_type",
+          "description": "The custom object type ID",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "count",
+          "description": "Number of results to return (default: 25)",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "start",
+          "description": "Starting index for pagination (default: 0)",
+          "type": "number",
+          "required": false
+        }
+      ],
+      "defaultBody": {
+        "query": {
+          "match_all_query": {}
+        },
+        "count": 25,
+        "start": 0
+      },
+      "apiType": "ocapi",
+      "requiresSiteId": false
+    },
+    {
+      "toolName": "get_custom_object",
+      "path": "/custom_objects/{object_type}/{key}",
+      "description": "Get a specific custom object by its type and key. Returns the full custom object data.",
+      "method": "GET",
+      "parameters": [
+        {
+          "name": "object_type",
+          "description": "The custom object type ID",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "key",
+          "description": "The unique key of the custom object",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "apiType": "ocapi",
+      "requiresSiteId": false
+    },
+    {
+      "toolName": "search_orders",
+      "path": "/order_search",
+      "description": "Search for orders in the SFCC instance. Returns order data including status, totals, and customer information.",
+      "method": "POST",
+      "parameters": [
+        {
+          "name": "site_id",
+          "description": "The site ID to search orders in",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "query",
+          "description": "Search query text (order number, customer email)",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "count",
+          "description": "Number of results to return (default: 25)",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "start",
+          "description": "Starting index for pagination (default: 0)",
+          "type": "number",
+          "required": false
+        }
+      ],
+      "defaultBody": {
+        "query": {
+          "match_all_query": {}
+        },
+        "count": 25,
+        "start": 0
+      },
+      "apiType": "ocapi",
+      "requiresSiteId": true
+    },
+    {
+      "toolName": "get_order",
+      "path": "/sites/{site_id}/orders/{order_no}",
+      "description": "Get detailed information about a specific order including line items, shipping, and payment details.",
+      "method": "GET",
+      "parameters": [
+        {
+          "name": "site_id",
+          "description": "The site ID containing the order",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "order_no",
+          "description": "The order number",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "expand",
+          "description": "Comma-separated list of fields to expand",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "apiType": "ocapi",
+      "requiresSiteId": true
+    },
+    {
+      "toolName": "get_locales",
+      "path": "/locales",
+      "description": "Get all available locales in the SFCC instance. Returns locale codes and display names.",
+      "method": "GET",
+      "parameters": [],
+      "apiType": "ocapi",
+      "requiresSiteId": false
+    },
+    {
+      "toolName": "get_currencies",
+      "path": "/currencies",
+      "description": "Get all available currencies in the SFCC instance. Returns currency codes and symbols.",
+      "method": "GET",
+      "parameters": [],
+      "apiType": "ocapi",
+      "requiresSiteId": false
+    },
+    {
+      "toolName": "get_price_books",
+      "path": "/price_books",
+      "description": "Get all price books in the SFCC instance. Returns price book IDs, names, and currency information.",
+      "method": "GET",
+      "parameters": [
+        {
+          "name": "count",
+          "description": "Number of results to return (default: 25)",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "start",
+          "description": "Starting index for pagination (default: 0)",
+          "type": "number",
+          "required": false
+        }
+      ],
+      "apiType": "ocapi",
+      "requiresSiteId": false
+    },
+    {
+      "toolName": "get_price_book",
+      "path": "/price_books/{price_book_id}",
+      "description": "Get detailed information about a specific price book including its prices.",
+      "method": "GET",
+      "parameters": [
+        {
+          "name": "price_book_id",
+          "description": "The unique price book ID",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "apiType": "ocapi",
+      "requiresSiteId": false
+    },
+    {
+      "toolName": "get_content_assets",
+      "path": "/libraries/{library_id}/content",
+      "description": "Get content assets from a content library. Returns content asset IDs, names, and body content.",
+      "method": "GET",
+      "parameters": [
+        {
+          "name": "library_id",
+          "description": "The content library ID",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "count",
+          "description": "Number of results to return (default: 25)",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "start",
+          "description": "Starting index for pagination (default: 0)",
+          "type": "number",
+          "required": false
+        }
+      ],
+      "apiType": "ocapi",
+      "requiresSiteId": false
+    },
+    {
+      "toolName": "get_content_asset",
+      "path": "/libraries/{library_id}/content/{content_id}",
+      "description": "Get a specific content asset by its ID. Returns full content asset data including body and custom attributes.",
+      "method": "GET",
+      "parameters": [
+        {
+          "name": "library_id",
+          "description": "The content library ID",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "content_id",
+          "description": "The content asset ID",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "apiType": "ocapi",
+      "requiresSiteId": false
+    }
+  ]
+}

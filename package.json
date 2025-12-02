@@ -1,19 +1,19 @@
 {
   "name": "sfcc-dev-mcp",
-  "version": "1.0.14",
-  "description": "MCP server for Salesforce B2C Commerce Cloud development assistance including logs, debugging, and development tools",
-  "mcpName": "io.github.taurgis/sfcc-dev-mcp",
+  "version": "1.1.0",
+  "description": "MCP server for Salesforce B2C Commerce Cloud development assistance including logs, debugging, OCAPI/SCAPI Data API, and development tools",
+  "mcpName": "io.github.acn-kuix/sfcc-mcp-server",
   "main": "dist/index.js",
   "bin": {
     "sfcc-dev-mcp": "./dist/main.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/taurgis/sfcc-dev-mcp.git"
+    "url": "git+https://github.com/acn-kuix/sfcc-mcp-server.git"
   },
-  "homepage": "https://github.com/taurgis/sfcc-dev-mcp#readme",
+  "homepage": "https://github.com/acn-kuix/sfcc-mcp-server#readme",
   "bugs": {
-    "url": "https://github.com/taurgis/sfcc-dev-mcp/issues"
+    "url": "https://github.com/acn-kuix/sfcc-mcp-server/issues"
   },
   "scripts": {
     "build": "tsc && rm -rf ./dist/docs && cp -r ./docs ./dist/docs",

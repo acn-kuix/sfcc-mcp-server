@@ -1,9 +1,9 @@
 /**
- * MCP Server for SFCC Development
+ * SFCC開発用MCPサーバー
  *
- * This module implements the Model Context Protocol (MCP) server for accessing
- * Salesforce B2C Commerce Cloud development features. It provides a standardized interface
- * for AI assistants to interact with SFCC development tools and data.
+ * このモジュールはSalesforce B2C Commerce Cloud開発機能にアクセスするための
+ * Model Context Protocol (MCP) サーバーを実装します。AIアシスタントがSFCC開発ツール
+ * およびデータと対話するための標準化されたインターフェースを提供します。
  */
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
@@ -22,11 +22,11 @@ import {
   LOG_TOOLS,
   JOB_LOG_TOOLS,
   SYSTEM_OBJECT_TOOLS,
-  CARTRIDGE_GENERATION_TOOLS,
   CODE_VERSION_TOOLS,
+  DATA_API_TOOLS,
 } from './tool-definitions.js';
 
-// Modular tool handlers
+// モジュラーツールハンドラー
 import { BaseToolHandler, HandlerContext } from './handlers/base-handler.js';
 import { LogToolHandler } from './handlers/log-handler.js';
 import { JobLogToolHandler } from './handlers/job-log-handler.js';
@@ -35,12 +35,13 @@ import { BestPracticesToolHandler } from './handlers/best-practices-handler.js';
 import { SFRAToolHandler } from './handlers/sfra-handler.js';
 import { SystemObjectToolHandler } from './handlers/system-object-handler.js';
 import { CodeVersionToolHandler } from './handlers/code-version-handler.js';
-import { CartridgeToolHandler } from './handlers/cartridge-handler.js';
+import { DataAPIToolHandler } from './handlers/data-api-handler.js';
 /**
- * MCP Server implementation for SFCC development assistance
+ * SFCC開発支援用MCPサーバー実装
  *
- * This class sets up the MCP server, defines available tools, and handles
- * requests from MCP clients (like AI assistants) to interact with SFCC development features.
+ * このクラスはMCPサーバーをセットアップし、利用可能なツールを定義し、
+ * MCPクライアント（AIアシスタントなど）からのリクエストを処理して
+ * SFCC開発機能と対話します。
  */
 export class SFCCDevServer {
   private server!: Server;
@@ -50,9 +51,9 @@ export class SFCCDevServer {
   private handlers: BaseToolHandler[] = [];
 
   /**
-   * Initialize the SFCC Development MCP Server
+   * SFCC開発MCPサーバーを初期化
    *
-   * @param config - SFCC configuration for connecting to the logging system
+   * @param config - ログシステムに接続するためのSFCC設定
    */
   constructor(config: SFCCConfig) {
     this.logger = Logger.getChildLogger('Server');
@@ -70,7 +71,7 @@ export class SFCCDevServer {
     this.server = new Server(
       {
         name: 'SFCC Development MCP Server',
-        version: '1.0.14', // synced with package.json
+        version: '1.1.0', // synced with package.json
       },
       {
         capabilities: {
@@ -88,7 +89,7 @@ export class SFCCDevServer {
     this.logger.methodExit(methodName, result);
   }
 
-  // Register modular handlers (each encapsulates its own responsibility)
+  // モジュラーハンドラーを登録（各ハンドラーは独自の責任をカプセル化）
   private registerHandlers(): void {
     const context: HandlerContext = {
       logger: this.logger,
@@ -103,24 +104,23 @@ export class SFCCDevServer {
       new SFRAToolHandler(context, 'SFRA'),
       new SystemObjectToolHandler(context, 'SystemObjects'),
       new CodeVersionToolHandler(context, 'CodeVersions'),
-      new CartridgeToolHandler(context, 'Cartridge'),
+      new DataAPIToolHandler(context, 'DataAPI'),
     ];
   }
 
   /**
-   * Set up MCP tool handlers for SFCC operations
+   * SFCC操作用のMCPツールハンドラーをセットアップ
    */
   private setupToolHandlers(): void {
     this.server.setRequestHandler(ListToolsRequestSchema, async () => {
       const tools = [];
 
-      // Always available tools
+      // 常に利用可能なツール
       tools.push(...SFCC_DOCUMENTATION_TOOLS);
       tools.push(...BEST_PRACTICES_TOOLS);
       tools.push(...SFRA_DOCUMENTATION_TOOLS);
-      tools.push(...CARTRIDGE_GENERATION_TOOLS);
 
-      // Conditional tools based on available capabilities
+      // 利用可能な機能に基づく条件付きツール
       if (this.capabilities.canAccessLogs) {
         tools.push(...LOG_TOOLS);
         tools.push(...JOB_LOG_TOOLS);
@@ -129,6 +129,7 @@ export class SFCCDevServer {
       if (this.capabilities.canAccessOCAPI) {
         tools.push(...SYSTEM_OBJECT_TOOLS);
         tools.push(...CODE_VERSION_TOOLS);
+        tools.push(...DATA_API_TOOLS);
       }
 
       return { tools };
@@ -148,7 +149,7 @@ export class SFCCDevServer {
         }
         const result = await handler.handle(name, args ?? {}, startTime);
 
-        // Log the full response in debug mode
+        // デバッグモードで完全なレスポンスをログ出力
         this.logger.debug(`Full response for ${name}:`, {
           contentType: result.content?.[0]?.type,
           contentLength: result.content?.[0]?.text?.length ?? 0,
@@ -170,7 +171,7 @@ export class SFCCDevServer {
           isError: true,
         };
 
-        // Log error response in debug mode
+        // デバッグモードでエラーレスポンスをログ出力
         this.logger.debug(`Error response for ${name}:`, errorResult);
 
         return errorResult as any;
@@ -181,12 +182,12 @@ export class SFCCDevServer {
   }
 
   /**
-   * Start the MCP server
+   * MCPサーバーを起動
    */
   async run(): Promise<void> {
     const transport = new StdioServerTransport();
 
-    // Set up graceful shutdown
+    // グレースフルシャットダウンをセットアップ
     process.on('SIGINT', () => this.shutdown());
     process.on('SIGTERM', () => this.shutdown());
 
@@ -195,12 +196,12 @@ export class SFCCDevServer {
   }
 
   /**
-   * Gracefully shutdown the server and dispose of resources
+   * サーバーをグレースフルにシャットダウンしリソースを解放
    */
   private async shutdown(): Promise<void> {
     this.logger.log('Shutting down SFCC Development MCP server...');
 
-    // Dispose of all handlers
+    // すべてのハンドラーを解放
     await Promise.all(this.handlers.map(handler => handler.dispose()));
 
     this.logger.log('SFCC Development MCP server shutdown complete');

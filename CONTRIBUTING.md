@@ -30,8 +30,8 @@ Thank you for your interest in contributing to the SFCC Development MCP Server! 
 1. Fork the repository on GitHub
 2. Clone your fork locally:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/sfcc-dev-mcp.git
-   cd sfcc-dev-mcp
+   git clone https://github.com/YOUR_USERNAME/sfcc-mcp-server.git
+   cd sfcc-mcp-server
    ```
 
 ## Development Setup

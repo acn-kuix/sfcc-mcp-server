@@ -74,8 +74,8 @@ const DevelopmentPage: React.FC = () => {
             <H3 id="local-development-setup">Local Development Setup</H3>
             <CodeBlock language="bash" code={`
 # Clone the repository
-git clone https://github.com/taurgis/sfcc-dev-mcp.git
-cd sfcc-dev-mcp
+git clone https://github.com/acn-kuix/sfcc-mcp-server.git
+cd sfcc-mcp-server
 
 # Install dependencies
 npm install
@@ -92,7 +92,7 @@ npm run dev -- --dw-json /Users/username/sfcc-project/dw.json
 
             <H2 id="project-architecture">🏗️ Project Architecture</H2>
             
-            <p className="text-[11px] text-gray-500 mb-4">Surface: <strong>36+ specialized tools</strong> spanning documentation, best practices, SFRA, cartridge generation, runtime logs, job logs, system & custom objects, site preferences, and code versions.</p>
+            <p className="text-[11px] text-gray-500 mb-4">Surface: <strong>35+ specialized tools</strong> spanning documentation, best practices, SFRA, runtime logs, job logs, system & custom objects, site preferences, and code versions.</p>
             <H3 id="directory-structure">Directory Structure</H3>
             <CodeBlock language="text" code={`
 sfcc-dev-mcp/
@@ -110,8 +110,7 @@ sfcc-dev-mcp/
 │   │       ├── log-handler.ts
 │   │       ├── job-log-handler.ts
 │   │       ├── system-object-handler.ts
-│   │       ├── code-version-handler.ts
-│   │       └── cartridge-handler.ts
+│   │       └── code-version-handler.ts
 │   ├── clients/                   # API & domain clients (logic, not routing)
 │   │   ├── base/                  # Shared HTTP + auth
 │   │   │   ├── http-client.ts
@@ -136,7 +135,6 @@ sfcc-dev-mcp/
 │   │   ├── docs-client.ts
 │   │   ├── sfra-client.ts
 │   │   ├── best-practices-client.ts
-│   │   ├── cartridge-generation-client.ts
 │   │   ├── ocapi/
 │   │   │   ├── site-preferences-client.ts
 │   │   │   └── system-objects-client.ts
@@ -154,7 +152,6 @@ sfcc-dev-mcp/
 │   │   ├── log-tool-config.ts
 │   │   ├── job-log-tool-config.ts
 │   │   ├── system-object-tool-config.ts
-│   │   ├── cartridge-tool-config.ts
 │   │   └── code-version-tool-config.ts
 │   ├── config/
 │   │   ├── configuration-factory.ts   # Mode & capability resolution
@@ -411,7 +408,7 @@ const createMockSFCCResponse = (overrides = {}) => ({
 
             <H3 id="testing-files-available">Testing Coverage Overview</H3>
             <ul className="list-disc pl-6 space-y-1">
-              <li><strong>Unit Clients</strong>: HTTP/auth, OCAPI subclients, docs, SFRA, best practices, cartridge generation.</li>
+              <li><strong>Unit Clients</strong>: HTTP/auth, OCAPI subclients, docs, SFRA, best practices.</li>
               <li><strong>Handlers</strong>: Each modular handler has focused tests (error shaping, capability filtering).</li>
               <li><strong>Log System</strong>: Discovery, reader, processor, analyzer, formatter modules.</li>
               <li><strong>Job Logs</strong>: Parsing & multi-level consolidation logic.</li>
@@ -595,10 +592,10 @@ function validateToolInput(input: unknown): ToolParams {
 
             <H2 id="next-steps">Next Steps</H2>
             <ul className="list-disc pl-6 space-y-2">
-                <li>📝 <strong><a href="https://github.com/taurgis/sfcc-dev-mcp/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">Contributing Guidelines</a></strong> - Detailed contribution process</li>
-                <li>🏗️ <strong><a href="https://github.com/taurgis/sfcc-dev-mcp/issues" target="_blank" rel="noopener noreferrer">Issues & Features</a></strong> - Report bugs or request features</li>
-                <li>💬 <strong><a href="https://github.com/taurgis/sfcc-dev-mcp/discussions" target="_blank" rel="noopener noreferrer">Discussions</a></strong> - Community discussions and Q&A</li>
-                <li>🚀 <strong><a href="https://github.com/taurgis/sfcc-dev-mcp/actions" target="_blank" rel="noopener noreferrer">GitHub Actions</a></strong> - View CI/CD pipeline status</li>
+                <li>📝 <strong><a href="https://github.com/acn-kuix/sfcc-mcp-server/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">Contributing Guidelines</a></strong> - Detailed contribution process</li>
+                <li>🏗️ <strong><a href="https://github.com/acn-kuix/sfcc-mcp-server/issues" target="_blank" rel="noopener noreferrer">Issues & Features</a></strong> - Report bugs or request features</li>
+                <li>💬 <strong><a href="https://github.com/acn-kuix/sfcc-mcp-server/discussions" target="_blank" rel="noopener noreferrer">Discussions</a></strong> - Community discussions and Q&A</li>
+                <li>🚀 <strong><a href="https://github.com/acn-kuix/sfcc-mcp-server/actions" target="_blank" rel="noopener noreferrer">GitHub Actions</a></strong> - View CI/CD pipeline status</li>
             </ul>
         </div>
     );

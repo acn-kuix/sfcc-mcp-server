@@ -1,8 +1,8 @@
 /**
- * MCP Tool Definitions for SFCC Development
+ * SFCC開発用MCPツール定義
  *
- * This module contains all the tool definitions organized by category
- * to keep the main server file clean and maintainable.
+ * このモジュールにはカテゴリ別に整理されたすべてのツール定義が含まれており、
+ * メインサーバーファイルをクリーンで保守しやすく保ちます。
  */
 
 export const SFCC_DOCUMENTATION_TOOLS = [
@@ -1024,32 +1024,6 @@ export const SYSTEM_OBJECT_TOOLS = [
   },
 ];
 
-export const CARTRIDGE_GENERATION_TOOLS = [
-  {
-    name: 'generate_cartridge_structure',
-    description: 'Generate a complete cartridge directory structure with all necessary files and configurations. Use this when creating new cartridges to ensure proper organization and include all required components. This tool creates all necessary files directly in the specified target directory, ensuring the cartridge is created exactly where needed in your project structure.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        cartridgeName: {
-          type: 'string',
-          description: 'Name of the cartridge (e.g., "plugin_example")',
-        },
-        targetPath: {
-          type: 'string',
-          description: 'Target directory path where the cartridge files should be placed. If not specified, files will be placed in the current working directory. Use absolute paths for best results (e.g., "/Users/username/projects/my-sfcc-project/").',
-        },
-        fullProjectSetup: {
-          type: 'boolean',
-          description: 'Whether to create a complete project setup (package.json, webpack, etc.) or just add a cartridge to existing project structure. Use true for new projects, false to add cartridge to existing projects. Always send the root of the project directory as the targetPath.',
-          default: true,
-        },
-      },
-      required: ['cartridgeName'],
-    },
-  },
-];
-
 export const CODE_VERSION_TOOLS = [
   {
     name: 'get_code_versions',
@@ -1071,6 +1045,592 @@ export const CODE_VERSION_TOOLS = [
         },
       },
       required: ['codeVersionId'],
+    },
+  },
+];
+
+export const DATA_API_TOOLS = [
+  // 製品ツール
+  {
+    name: 'search_products',
+    description: 'Search for products in the SFCC catalog using various filters. Supports filtering by name, price range, category, and other attributes. Returns product data including ID, name, price, and availability. Use this to explore product catalog, find specific products, or analyze product data.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        site_id: {
+          type: 'string',
+          description: 'The site ID to search products in',
+        },
+        query: {
+          type: 'string',
+          description: 'Search query text to find products by name or description',
+        },
+        count: {
+          type: 'number',
+          description: 'Number of results to return (default: 25, max: 200)',
+          default: 25,
+        },
+        start: {
+          type: 'number',
+          description: 'Starting index for pagination (default: 0)',
+          default: 0,
+        },
+        expand: {
+          type: 'string',
+          description: "Comma-separated list of fields to expand (e.g., 'prices,images,availability')",
+        },
+      },
+      required: ['site_id'],
+    },
+  },
+  {
+    name: 'get_product',
+    description: 'Get detailed information about a specific product by its ID. Returns full product data including variants, prices, images, and custom attributes. Use this when you need complete details about a specific product.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        site_id: {
+          type: 'string',
+          description: 'The site ID where the product exists',
+        },
+        product_id: {
+          type: 'string',
+          description: 'The unique product ID',
+        },
+        expand: {
+          type: 'string',
+          description: "Comma-separated list of fields to expand (e.g., 'prices,images,variations')",
+        },
+      },
+      required: ['site_id', 'product_id'],
+    },
+  },
+  // カタログツール
+  {
+    name: 'get_catalogs',
+    description: 'Get a list of all available catalogs in the SFCC instance. Returns catalog IDs, names, and basic metadata. Use this to discover available catalogs for product management.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        count: {
+          type: 'number',
+          description: 'Number of results to return (default: 25)',
+          default: 25,
+        },
+        start: {
+          type: 'number',
+          description: 'Starting index for pagination (default: 0)',
+          default: 0,
+        },
+      },
+    },
+  },
+  {
+    name: 'get_catalog',
+    description: 'Get detailed information about a specific catalog including its categories and configuration. Use this to understand catalog structure and settings.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        catalog_id: {
+          type: 'string',
+          description: 'The unique catalog ID',
+        },
+      },
+      required: ['catalog_id'],
+    },
+  },
+  {
+    name: 'get_categories',
+    description: 'Get all categories within a specific catalog. Returns category hierarchy with IDs, names, and parent relationships. Use this to understand category structure for navigation or product organization.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        catalog_id: {
+          type: 'string',
+          description: 'The catalog ID to get categories from',
+        },
+        levels: {
+          type: 'number',
+          description: 'Number of category levels to return (default: 1)',
+          default: 1,
+        },
+        count: {
+          type: 'number',
+          description: 'Number of results to return (default: 25)',
+          default: 25,
+        },
+        start: {
+          type: 'number',
+          description: 'Starting index for pagination (default: 0)',
+          default: 0,
+        },
+      },
+      required: ['catalog_id'],
+    },
+  },
+  {
+    name: 'get_category',
+    description: 'Get detailed information about a specific category including its subcategories and products. Use this to explore category details and structure.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        catalog_id: {
+          type: 'string',
+          description: 'The catalog ID containing the category',
+        },
+        category_id: {
+          type: 'string',
+          description: 'The unique category ID',
+        },
+        levels: {
+          type: 'number',
+          description: 'Number of subcategory levels to return',
+        },
+      },
+      required: ['catalog_id', 'category_id'],
+    },
+  },
+  // サイトツール
+  {
+    name: 'get_sites',
+    description: 'Get a list of all sites in the SFCC instance. Returns site IDs, names, and configuration details. Use this to discover available sites for multi-site management.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        count: {
+          type: 'number',
+          description: 'Number of results to return (default: 25)',
+          default: 25,
+        },
+        start: {
+          type: 'number',
+          description: 'Starting index for pagination (default: 0)',
+          default: 0,
+        },
+      },
+    },
+  },
+  {
+    name: 'get_site',
+    description: 'Get detailed information about a specific site including its configuration, locales, and currencies. Use this to understand site settings and capabilities.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        site_id: {
+          type: 'string',
+          description: 'The unique site ID',
+        },
+      },
+      required: ['site_id'],
+    },
+  },
+  // キャンペーンとプロモーションツール
+  {
+    name: 'search_campaigns',
+    description: 'Search for campaigns in the SFCC instance. Returns campaign data including status, dates, and associated promotions. Use this to find and analyze marketing campaigns.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        site_id: {
+          type: 'string',
+          description: 'The site ID to search campaigns in',
+        },
+        count: {
+          type: 'number',
+          description: 'Number of results to return (default: 25)',
+          default: 25,
+        },
+        start: {
+          type: 'number',
+          description: 'Starting index for pagination (default: 0)',
+          default: 0,
+        },
+      },
+      required: ['site_id'],
+    },
+  },
+  {
+    name: 'get_campaign',
+    description: 'Get detailed information about a specific campaign including its promotions and configuration. Use this to understand campaign setup and associated promotions.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        site_id: {
+          type: 'string',
+          description: 'The site ID containing the campaign',
+        },
+        campaign_id: {
+          type: 'string',
+          description: 'The unique campaign ID',
+        },
+      },
+      required: ['site_id', 'campaign_id'],
+    },
+  },
+  {
+    name: 'search_promotions',
+    description: 'Search for promotions in the SFCC instance. Returns promotion data including type, discounts, and qualifiers. Use this to find and analyze promotional offers.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        site_id: {
+          type: 'string',
+          description: 'The site ID to search promotions in',
+        },
+        campaign_id: {
+          type: 'string',
+          description: 'Filter promotions by campaign ID',
+        },
+        count: {
+          type: 'number',
+          description: 'Number of results to return (default: 25)',
+          default: 25,
+        },
+        start: {
+          type: 'number',
+          description: 'Starting index for pagination (default: 0)',
+          default: 0,
+        },
+      },
+      required: ['site_id'],
+    },
+  },
+  {
+    name: 'search_coupons',
+    description: 'Search for coupons in the SFCC instance. Returns coupon codes, redemption limits, and associated promotions. Use this to find and manage coupon codes.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        site_id: {
+          type: 'string',
+          description: 'The site ID to search coupons in',
+        },
+        count: {
+          type: 'number',
+          description: 'Number of results to return (default: 25)',
+          default: 25,
+        },
+        start: {
+          type: 'number',
+          description: 'Starting index for pagination (default: 0)',
+          default: 0,
+        },
+      },
+      required: ['site_id'],
+    },
+  },
+  // 在庫ツール
+  {
+    name: 'get_inventory_lists',
+    description: 'Get all inventory lists in the SFCC instance. Returns list IDs, names, and configuration. Use this to discover available inventory lists for stock management.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        count: {
+          type: 'number',
+          description: 'Number of results to return (default: 25)',
+          default: 25,
+        },
+        start: {
+          type: 'number',
+          description: 'Starting index for pagination (default: 0)',
+          default: 0,
+        },
+      },
+    },
+  },
+  {
+    name: 'get_inventory_list',
+    description: 'Get detailed information about a specific inventory list including its configuration. Use this to understand inventory list settings.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        inventory_list_id: {
+          type: 'string',
+          description: 'The unique inventory list ID',
+        },
+      },
+      required: ['inventory_list_id'],
+    },
+  },
+  {
+    name: 'get_product_inventory',
+    description: 'Get inventory information for a specific product in an inventory list. Returns stock levels and availability status.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        inventory_list_id: {
+          type: 'string',
+          description: 'The inventory list ID',
+        },
+        product_id: {
+          type: 'string',
+          description: 'The product ID to get inventory for',
+        },
+      },
+      required: ['inventory_list_id', 'product_id'],
+    },
+  },
+  // 顧客ツール
+  {
+    name: 'search_customers',
+    description: 'Search for customers in the SFCC instance. Returns customer data including profiles, addresses, and order history references. Use this to find specific customers or analyze customer data.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        site_id: {
+          type: 'string',
+          description: 'The site ID to search customers in',
+        },
+        query: {
+          type: 'string',
+          description: 'Search query text (email, name, customer number)',
+        },
+        count: {
+          type: 'number',
+          description: 'Number of results to return (default: 25)',
+          default: 25,
+        },
+        start: {
+          type: 'number',
+          description: 'Starting index for pagination (default: 0)',
+          default: 0,
+        },
+      },
+      required: ['site_id'],
+    },
+  },
+  {
+    name: 'get_customer',
+    description: 'Get detailed information about a specific customer including profile, addresses, and payment instruments. Use this for customer support or analysis.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        site_id: {
+          type: 'string',
+          description: 'The site ID containing the customer',
+        },
+        customer_id: {
+          type: 'string',
+          description: 'The unique customer ID',
+        },
+        expand: {
+          type: 'string',
+          description: "Comma-separated list of fields to expand (e.g., 'addresses,payment_instruments')",
+        },
+      },
+      required: ['site_id', 'customer_id'],
+    },
+  },
+  {
+    name: 'get_customer_groups',
+    description: 'Get all customer groups for a specific site. Returns group IDs, names, and descriptions. Use this to understand customer segmentation.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        site_id: {
+          type: 'string',
+          description: 'The site ID to get customer groups from',
+        },
+        count: {
+          type: 'number',
+          description: 'Number of results to return (default: 25)',
+          default: 25,
+        },
+        start: {
+          type: 'number',
+          description: 'Starting index for pagination (default: 0)',
+          default: 0,
+        },
+      },
+      required: ['site_id'],
+    },
+  },
+  // カスタムオブジェクトツール
+  {
+    name: 'search_custom_objects',
+    description: 'Search for custom objects of a specific type. Returns custom object data based on the object definition. Use this to query custom data stored in SFCC custom objects.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        object_type: {
+          type: 'string',
+          description: 'The custom object type ID',
+        },
+        count: {
+          type: 'number',
+          description: 'Number of results to return (default: 25)',
+          default: 25,
+        },
+        start: {
+          type: 'number',
+          description: 'Starting index for pagination (default: 0)',
+          default: 0,
+        },
+      },
+      required: ['object_type'],
+    },
+  },
+  {
+    name: 'get_custom_object',
+    description: 'Get a specific custom object by its type and key. Returns the full custom object data. Use this to retrieve specific custom data records.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        object_type: {
+          type: 'string',
+          description: 'The custom object type ID',
+        },
+        key: {
+          type: 'string',
+          description: 'The unique key of the custom object',
+        },
+      },
+      required: ['object_type', 'key'],
+    },
+  },
+  // 注文ツール
+  {
+    name: 'search_orders',
+    description: 'Search for orders in the SFCC instance. Returns order data including status, totals, and customer information. Use this to find and analyze orders.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        site_id: {
+          type: 'string',
+          description: 'The site ID to search orders in',
+        },
+        query: {
+          type: 'string',
+          description: 'Search query text (order number, customer email)',
+        },
+        count: {
+          type: 'number',
+          description: 'Number of results to return (default: 25)',
+          default: 25,
+        },
+        start: {
+          type: 'number',
+          description: 'Starting index for pagination (default: 0)',
+          default: 0,
+        },
+      },
+      required: ['site_id'],
+    },
+  },
+  {
+    name: 'get_order',
+    description: 'Get detailed information about a specific order including line items, shipping, and payment details. Use this for order support or analysis.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        site_id: {
+          type: 'string',
+          description: 'The site ID containing the order',
+        },
+        order_no: {
+          type: 'string',
+          description: 'The order number',
+        },
+        expand: {
+          type: 'string',
+          description: 'Comma-separated list of fields to expand',
+        },
+      },
+      required: ['site_id', 'order_no'],
+    },
+  },
+  // 価格とロケールツール
+  {
+    name: 'get_locales',
+    description: 'Get all available locales in the SFCC instance. Returns locale codes and display names. Use this to understand supported languages and regions.',
+    inputSchema: {
+      type: 'object',
+      properties: {},
+    },
+  },
+  {
+    name: 'get_currencies',
+    description: 'Get all available currencies in the SFCC instance. Returns currency codes and symbols. Use this to understand supported currencies for pricing.',
+    inputSchema: {
+      type: 'object',
+      properties: {},
+    },
+  },
+  {
+    name: 'get_price_books',
+    description: 'Get all price books in the SFCC instance. Returns price book IDs, names, and currency information. Use this to discover available price books.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        count: {
+          type: 'number',
+          description: 'Number of results to return (default: 25)',
+          default: 25,
+        },
+        start: {
+          type: 'number',
+          description: 'Starting index for pagination (default: 0)',
+          default: 0,
+        },
+      },
+    },
+  },
+  {
+    name: 'get_price_book',
+    description: 'Get detailed information about a specific price book including its prices. Use this to understand pricing configuration.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        price_book_id: {
+          type: 'string',
+          description: 'The unique price book ID',
+        },
+      },
+      required: ['price_book_id'],
+    },
+  },
+  // コンテンツツール
+  {
+    name: 'get_content_assets',
+    description: 'Get content assets from a content library. Returns content asset IDs, names, and body content. Use this to explore content management.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        library_id: {
+          type: 'string',
+          description: 'The content library ID',
+        },
+        count: {
+          type: 'number',
+          description: 'Number of results to return (default: 25)',
+          default: 25,
+        },
+        start: {
+          type: 'number',
+          description: 'Starting index for pagination (default: 0)',
+          default: 0,
+        },
+      },
+      required: ['library_id'],
+    },
+  },
+  {
+    name: 'get_content_asset',
+    description: 'Get a specific content asset by its ID. Returns full content asset data including body and custom attributes.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        library_id: {
+          type: 'string',
+          description: 'The content library ID',
+        },
+        content_id: {
+          type: 'string',
+          description: 'The content asset ID',
+        },
+      },
+      required: ['library_id', 'content_id'],
     },
   },
 ];

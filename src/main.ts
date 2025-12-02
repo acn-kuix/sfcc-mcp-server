@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Main entry point for the SFCC Development MCP Server
+ * SFCC開発MCPサーバーのメインエントリーポイント
  */
 
 import { SFCCDevServer } from './core/server.js';
@@ -11,7 +11,7 @@ import { existsSync } from 'fs';
 import { resolve } from 'path';
 
 /**
- * Parse command line arguments to extract configuration options
+ * コマンドライン引数を解析して設定オプションを抽出
  */
 function parseCommandLineArgs(): { dwJsonPath?: string; debug?: boolean } {
   const args = process.argv.slice(2);
@@ -28,7 +28,7 @@ function parseCommandLineArgs(): { dwJsonPath?: string; debug?: boolean } {
       options.debug = debugValue === 'true' || debugValue === '1' || debugValue === 'yes';
       i++; // Skip the next argument since we consumed it
     } else if (arg === '--debug') {
-      // Allow --debug without a value to default to true
+      // 値なしの --debug をデフォルトで true に設定
       options.debug = true;
     }
   }
@@ -37,7 +37,7 @@ function parseCommandLineArgs(): { dwJsonPath?: string; debug?: boolean } {
 }
 
 /**
- * Find dw.json file in common locations
+ * 一般的な場所でdw.jsonファイルを検索
  */
 function findDwJsonFile(): string | undefined {
   const commonPaths = [
@@ -59,14 +59,14 @@ function findDwJsonFile(): string | undefined {
 }
 
 /**
- * Main application entry point
+ * メインアプリケーションエントリーポイント
  */
 async function main(): Promise<void> {
   try {
     const options = parseCommandLineArgs();
     const debug = options.debug ?? false;
 
-    // Initialize the global logger with debug setting
+    // デバッグ設定でグローバルロガーを初期化
     Logger.initialize('SFCC-MCP-Server', true, debug);
     const logger = Logger.getInstance();
 
@@ -75,13 +75,13 @@ async function main(): Promise<void> {
       logger.log('Debug mode enabled');
     }
 
-    // Try to find dw.json if not explicitly provided
+    // 明示的に指定されていない場合はdw.jsonを検索
     const dwJsonPath = options.dwJsonPath ?? findDwJsonFile();
 
-    // Create configuration using the factory
+    // ファクトリーを使用して設定を作成
     const config = ConfigurationFactory.create({
       dwJsonPath,
-      // Add support for environment variables as fallback
+      // フォールバックとして環境変数をサポート
       hostname: process.env.SFCC_HOSTNAME,
       username: process.env.SFCC_USERNAME,
       password: process.env.SFCC_PASSWORD,
@@ -89,7 +89,7 @@ async function main(): Promise<void> {
       clientSecret: process.env.SFCC_CLIENT_SECRET,
     });
 
-    // Log configuration summary (without sensitive data)
+    // 設定サマリーをログ出力（機密データを除く）
     const capabilities = ConfigurationFactory.getCapabilities(config);
 
     if (capabilities.isLocalMode) {
@@ -100,7 +100,7 @@ async function main(): Promise<void> {
       logger.log(`Available features: Logs=${capabilities.canAccessLogs}, OCAPI=${capabilities.canAccessOCAPI}, WebDAV=${capabilities.canAccessWebDAV}`);
     }
 
-    // Create and start the server
+    // サーバーを作成して起動
     const server = new SFCCDevServer(config);
     await server.run();
   } catch (error) {
@@ -120,7 +120,7 @@ async function main(): Promise<void> {
   }
 }
 
-// Run the main function
+// メイン関数を実行
 main().catch((error) => {
   const logger = Logger.getInstance();
   logger.error('Unhandled error:', error);

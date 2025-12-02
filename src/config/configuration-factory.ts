@@ -1,9 +1,9 @@
 /**
- * Configuration factory for SFCC MCP Server
+ * SFCC MCPサーバー用設定ファクトリー
  *
- * Centralized configuration management with validation and defaults.
- * This factory creates SFCCConfig objects from various sources while
- * leveraging secure file loading from the config module.
+ * バリデーションとデフォルト値を備えた集中型設定管理。
+ * このファクトリーは、configモジュールからのセキュアなファイル読み込みを
+ * 活用しながら、様々なソースからSFCCConfigオブジェクトを作成します。
  */
 
 import { existsSync } from 'fs';
@@ -13,7 +13,7 @@ import { loadSecureDwJson } from './dw-json-loader.js';
 
 export class ConfigurationFactory {
   /**
-   * Create configuration from various sources with proper validation
+   * 適切なバリデーションを行いながら様々なソースから設定を作成
    */
   static create(options: {
     dwJsonPath?: string;
@@ -23,15 +23,17 @@ export class ConfigurationFactory {
     clientId?: string;
     clientSecret?: string;
     siteId?: string;
+    shortCode?: string;
+    organizationId?: string;
   }): SFCCConfig {
     let config: SFCCConfig;
 
-    // Load from dw.json if path provided
+    // パスが提供されている場合はdw.jsonからロード
     if (options.dwJsonPath) {
       const dwConfig = this.loadFromDwJson(options.dwJsonPath);
       config = this.mapDwJsonToConfig(dwConfig);
     } else {
-      // Create from provided options
+      // 提供されたオプションから作成
       config = {
         hostname: options.hostname ?? '',
         username: options.username,
@@ -39,27 +41,31 @@ export class ConfigurationFactory {
         clientId: options.clientId,
         clientSecret: options.clientSecret,
         siteId: options.siteId,
+        shortCode: options.shortCode,
+        organizationId: options.organizationId,
       };
     }
 
-    // Override with any provided options (command-line args take precedence)
+    // 提供されたオプションで上書き（コマンドライン引数が優先）
     if (options.hostname) {config.hostname = options.hostname;}
     if (options.username) {config.username = options.username;}
     if (options.password) {config.password = options.password;}
     if (options.clientId) {config.clientId = options.clientId;}
     if (options.clientSecret) {config.clientSecret = options.clientSecret;}
     if (options.siteId) {config.siteId = options.siteId;}
+    if (options.shortCode) {config.shortCode = options.shortCode;}
+    if (options.organizationId) {config.organizationId = options.organizationId;}
 
     this.validate(config);
     return config;
   }
 
   /**
-   * Load configuration from dw.json file using secure file loading
+   * セキュアなファイル読み込みを使用してdw.jsonファイルから設定をロード
    *
-   * @param dwJsonPath - Path to the dw.json file
-   * @returns Parsed dw.json configuration
-   * @throws Error if file cannot be loaded or is invalid
+   * @param dwJsonPath - dw.jsonファイルへのパス
+   * @returns パースされたdw.json設定
+   * @throws ファイルが読み込めないか無効な場合はエラー
    */
   private static loadFromDwJson(dwJsonPath: string): DwJsonConfig {
     const resolvedPath = resolve(dwJsonPath);
@@ -68,19 +74,19 @@ export class ConfigurationFactory {
       throw new Error(`dw.json file not found at: ${resolvedPath}`);
     }
 
-    // Use the secure loading function from dw-json-loader.ts
-    // This ensures all security validations are applied consistently
+    // dw-json-loader.tsからセキュアな読み込み関数を使用
+    // これにより、すべてのセキュリティバリデーションが一貫して適用されます
     return loadSecureDwJson(dwJsonPath);
   }
 
   /**
-   * Map dw.json structure to SFCCConfig
+   * dw.json構造をSFCCConfigにマッピング
    *
-   * Transforms the dw.json format (with kebab-case properties) to the
-   * internal SFCCConfig format (with camelCase properties).
+   * dw.json形式（kebab-caseプロパティ）を内部のSFCCConfig形式
+   * （camelCaseプロパティ）に変換します。
    *
-   * @param dwConfig - The parsed dw.json configuration
-   * @returns Mapped SFCCConfig object
+   * @param dwConfig - パースされたdw.json設定
+   * @returns マッピングされたSFCCConfigオブジェクト
    */
   static mapDwJsonToConfig(dwConfig: DwJsonConfig): SFCCConfig {
     const config: SFCCConfig = {
@@ -89,48 +95,57 @@ export class ConfigurationFactory {
       password: dwConfig.password,
     };
 
-    // Map OAuth credentials if present
+    // OAuth認証情報が存在する場合はマッピング
     if (dwConfig['client-id'] && dwConfig['client-secret']) {
       config.clientId = dwConfig['client-id'];
       config.clientSecret = dwConfig['client-secret'];
     }
 
-    // Map site ID if present
+    // サイトIDが存在する場合はマッピング
     if (dwConfig['site-id']) {
       config.siteId = dwConfig['site-id'];
+    }
+
+    // SCAPI認証情報が存在する場合はマッピング
+    if (dwConfig['short-code']) {
+      config.shortCode = dwConfig['short-code'];
+    }
+
+    if (dwConfig['organization-id']) {
+      config.organizationId = dwConfig['organization-id'];
     }
 
     return config;
   }
 
   /**
-   * Validate configuration for different operating modes
+   * 異なる動作モードに対する設定のバリデーション
    *
-   * This validation supports both documentation-only mode (no credentials required)
-   * and full mode (credentials required for API access).
+   * このバリデーションはドキュメント専用モード（認証情報不要）と
+   * フルモード（APIアクセスに認証情報が必要）の両方をサポートします。
    *
-   * @param config - The configuration to validate
-   * @throws Error if configuration is invalid for any supported mode
+   * @param config - バリデーションする設定
+   * @throws サポートされているモードのいずれかで設定が無効な場合はエラー
    */
   private static validate(config: SFCCConfig): void {
     const hasBasicAuth = config.username && config.password;
     const hasOAuth = config.clientId && config.clientSecret;
     const hasHostname = config.hostname && config.hostname.trim() !== '';
 
-    // Allow local mode if no credentials or hostname are provided
+    // 認証情報やホスト名が提供されていない場合はローカルモードを許可
     if (!hasBasicAuth && !hasOAuth && !hasHostname) {
-      // Local mode - only class documentation available
+      // ローカルモード - クラスドキュメントのみ利用可能
       return;
     }
 
-    // If hostname is provided, require credentials
+    // ホスト名が提供されている場合は認証情報を要求
     if (hasHostname && !hasBasicAuth && !hasOAuth) {
       throw new Error(
         'When hostname is provided, either username/password or OAuth credentials (clientId/clientSecret) must be provided',
       );
     }
 
-    // Additional hostname validation if provided
+    // 提供されている場合は追加のホスト名バリデーション
     if (hasHostname) {
       const trimmedHostname = config.hostname!.trim();
       if (!trimmedHostname.match(/^[a-zA-Z0-9.-]+(?::[0-9]+)?$/)) {
@@ -140,29 +155,28 @@ export class ConfigurationFactory {
   }
 
   /**
-   * Check if configuration supports specific features
+   * 設定が特定の機能をサポートしているかチェック
    *
-   * This method analyzes the provided configuration to determine what
-   * capabilities are available based on the credentials and hostname provided.
+   * このメソッドは提供された設定を分析し、認証情報とホスト名に基づいて
+   * どの機能が利用可能かを判断します。
    *
-   * @param config - The configuration to analyze
-   * @returns Object describing available capabilities
+   * @param config - 分析する設定
+   * @returns 利用可能な機能を説明するオブジェクト
    */
   static getCapabilities(config: SFCCConfig): {
     canAccessLogs: boolean;
     canAccessOCAPI: boolean;
     canAccessWebDAV: boolean;
-    canGenerateCartridges: boolean;
     isLocalMode: boolean;
   } {
-    // WebDAV/Logs can work with either basic auth OR OAuth credentials
+    // WebDAV/ログは基本認証またはOAuth認証のいずれかで動作可能
     const hasWebDAVCredentials = !!(config.username && config.password) ||
       !!(config.clientId && config.clientSecret);
 
-    // OCAPI specifically requires OAuth credentials
+    // OCAPIは特にOAuth認証情報を必要とします
     const hasOAuthCredentials = !!(config.clientId && config.clientSecret);
 
-    // Local mode when no hostname or credentials are provided
+    // ホスト名や認証情報が提供されていない場合はローカルモード
     const hasHostname = !!(config.hostname && config.hostname.trim() !== '');
     const isLocalMode = !hasHostname && !hasWebDAVCredentials;
 
@@ -170,18 +184,17 @@ export class ConfigurationFactory {
       canAccessLogs: hasWebDAVCredentials && hasHostname,
       canAccessOCAPI: hasOAuthCredentials && hasHostname,
       canAccessWebDAV: hasWebDAVCredentials && hasHostname,
-      canGenerateCartridges: true, // Always available since it's a local file operation
       isLocalMode,
     };
   }
 
   /**
-   * Create a configuration for local development mode
+   * ローカル開発モード用の設定を作成
    *
-   * This creates a minimal configuration that only provides access to
-   * documentation and best practices without requiring any SFCC credentials.
+   * SFCC認証情報を必要とせず、ドキュメントとベストプラクティスへの
+   * アクセスのみを提供する最小限の設定を作成します。
    *
-   * @returns Configuration for local/documentation-only mode
+   * @returns ローカル/ドキュメント専用モードの設定
    */
   static createLocalMode(): SFCCConfig {
     return {
@@ -191,6 +204,8 @@ export class ConfigurationFactory {
       clientId: undefined,
       clientSecret: undefined,
       siteId: undefined,
+      shortCode: undefined,
+      organizationId: undefined,
     };
   }
 }

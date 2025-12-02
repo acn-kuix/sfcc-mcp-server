@@ -19,7 +19,7 @@ We take the security of the SFCC Development MCP Server seriously. If you discov
 
 Instead, please report security vulnerabilities by:
 
-1. **GitHub Security Advisories**: Use GitHub's private vulnerability reporting feature at [https://github.com/taurgis/sfcc-dev-mcp/security/advisories](https://github.com/taurgis/sfcc-dev-mcp/security/advisories)
+1. **GitHub Security Advisories**: Use GitHub's private vulnerability reporting feature at [https://github.com/acn-kuix/sfcc-mcp-server/security/advisories](https://github.com/acn-kuix/sfcc-mcp-server/security/advisories)
 
 ### 📋 What to Include
 
@@ -140,8 +140,8 @@ We believe in responsible disclosure and will work with security researchers to:
 
 For security-related questions or concerns:
 
-- **GitHub**: [@taurgis](https://github.com/taurgis)
-- **Project**: [sfcc-dev-mcp](https://github.com/taurgis/sfcc-dev-mcp)
+- **GitHub**: [@acn-kuix](https://github.com/acn-kuix)
+- **Project**: [sfcc-mcp-server](https://github.com/acn-kuix/sfcc-mcp-server)
 
 ---
 

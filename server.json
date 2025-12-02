@@ -1,19 +1,19 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json",
-  "name": "io.github.taurgis/sfcc-dev-mcp",
+  "name": "io.github.acn-kuix/sfcc-mcp-server",
   "description": "MCP server for Salesforce B2C Commerce Cloud development assistance",
   "status": "active",
   "repository": {
-    "url": "https://github.com/taurgis/sfcc-dev-mcp",
+    "url": "https://github.com/acn-kuix/sfcc-mcp-server",
     "source": "github"
   },
-  "version": "1.0.14",
+  "version": "1.1.0",
   "packages": [
     {
       "registry_type": "npm",
       "registry_base_url": "https://registry.npmjs.org",
       "identifier": "sfcc-dev-mcp",
-      "version": "1.0.14",
+      "version": "1.1.0",
       "transport": {
         "type": "stdio"
       }

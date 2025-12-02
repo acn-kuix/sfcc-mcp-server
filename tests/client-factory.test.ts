@@ -7,7 +7,6 @@ import { SFCCConfig } from '../src/types/types.js';
 jest.mock('../src/clients/log-client.js');
 jest.mock('../src/clients/ocapi-client.js');
 jest.mock('../src/clients/ocapi/code-versions-client.js');
-jest.mock('../src/clients/cartridge-generation-client.js');
 
 describe('ClientFactory', () => {
   let mockLogger: jest.Mocked<Logger>;
@@ -219,45 +218,6 @@ describe('ClientFactory', () => {
 
       expect(client).toBeNull();
       expect(mockLogger.debug).toHaveBeenCalledWith('Code versions client not created: missing OCAPI credentials or capability');
-    });
-  });
-
-  describe('createCartridgeClient', () => {
-    it('should create cartridge client with default services', () => {
-      const context: HandlerContext = {
-        logger: mockLogger,
-        config: {} as SFCCConfig,
-        capabilities: {
-          canAccessLogs: false,
-          canAccessOCAPI: false,
-        },
-      };
-      factory = new ClientFactory(context, mockLogger);
-
-      const client = factory.createCartridgeClient();
-
-      expect(client).toBeDefined();
-      expect(mockLogger.debug).toHaveBeenCalledWith('Creating Cartridge Generation Client');
-    });
-
-    it('should create cartridge client with custom services', () => {
-      const context: HandlerContext = {
-        logger: mockLogger,
-        config: {} as SFCCConfig,
-        capabilities: {
-          canAccessLogs: false,
-          canAccessOCAPI: false,
-        },
-      };
-      factory = new ClientFactory(context, mockLogger);
-
-      const mockFileSystem = { writeFile: jest.fn() } as any;
-      const mockPath = { join: jest.fn() } as any;
-
-      const client = factory.createCartridgeClient(mockFileSystem, mockPath);
-
-      expect(client).toBeDefined();
-      expect(mockLogger.debug).toHaveBeenCalledWith('Creating Cartridge Generation Client');
     });
   });
 

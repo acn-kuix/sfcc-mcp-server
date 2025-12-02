@@ -2,9 +2,7 @@ import { HandlerContext } from './base-handler.js';
 import { SFCCLogClient } from '../../clients/log-client.js';
 import { OCAPIClient } from '../../clients/ocapi-client.js';
 import { OCAPICodeVersionsClient } from '../../clients/ocapi/code-versions-client.js';
-import { CartridgeGenerationClient } from '../../clients/cartridge-generation-client.js';
 import { Logger } from '../../utils/logger.js';
-import { IFileSystemService, IPathService, FileSystemService, PathService } from '../../services/index.js';
 
 /**
  * Centralized client factory that handles complex initialization logic
@@ -77,20 +75,6 @@ export class ClientFactory {
       this.context.config?.hostname &&
       this.context.config?.clientId &&
       this.context.config?.clientSecret
-    );
-  }
-
-  /**
-   * Create a Cartridge Generation Client with injected dependencies
-   */
-  createCartridgeClient(
-    fileSystemService?: IFileSystemService,
-    pathService?: IPathService,
-  ): CartridgeGenerationClient {
-    this.logger.debug('Creating Cartridge Generation Client');
-    return new CartridgeGenerationClient(
-      fileSystemService ?? new FileSystemService(),
-      pathService ?? new PathService(),
     );
   }
 
