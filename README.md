@@ -23,7 +23,7 @@ Salesforce B2C Commerce Cloud の開発ツール、ドキュメント、ベス�
   "mcpServers": {
     "sfcc-dev": {
       "command": "npx",
-      "args": ["sfcc-dev-mcp"]
+      "args": ["sfcc-mcp-server"]
     }
   }
 }
@@ -35,7 +35,7 @@ Salesforce B2C Commerce Cloud の開発ツール、ドキュメント、ベス�
   "mcpServers": {
     "sfcc-dev": {
       "command": "npx",
-      "args": ["sfcc-dev-mcp", "--dw-json", "/path/to/your/dw.json"]
+      "args": ["sfcc-mcp-server", "--dw-json", "/path/to/your/dw.json"]
     }
   }
 }
